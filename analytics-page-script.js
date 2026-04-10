@@ -66,12 +66,14 @@ function updateActiveNav() {
 
 window.addEventListener('scroll', updateActiveNav);
 
-// Track if button handler has been attached
+// ============================================================================
+// CUSTOM EVENT TRACKING FOR GET-STARTED BUTTON (COMMENTED OUT FOR NOW)
+// ============================================================================
+// Uncomment the code below to enable custom event logging and tracking
+/*
 let getStartedBtnInitialized = false;
 
-// Wait for Branch SDK to be ready, then attach event listener
 function initGetStartedButton() {
-    // Prevent duplicate event listener attachment
     if (getStartedBtnInitialized) return;
     
     const btn = document.getElementById('get-started-btn');
@@ -84,29 +86,28 @@ function initGetStartedButton() {
         const targetUrl = this.href;
         const eventName = "custom_evt_srt_link";
 
-        // Check if Branch is initialized
         if (typeof branch === 'undefined' || !branch) {
             console.warn("Branch SDK not initialized, redirecting directly");
             window.location.href = targetUrl;
             return;
         }
 
-        // Track the event
-        //console.log("Logging Branch event:", eventName);
+        console.log("Logging Branch event:", eventName);
 
-        // Log event and then redirect
-        branch.logEvent(eventName, function(err) {
+        let branchEvent = new branch.BranchEvent(eventName);
+        branchEvent.addCustomDataProperty('button_name', 'Get Started');
+        branchEvent.addCustomDataProperty('redirect_url', targetUrl);
+
+        branchEvent.logEvent(function(err) {
             if (err) {
                 console.error("Branch event logging error:", err);
             } else {
                 console.log("✓ Branch event logged successfully:", eventName);
             }
             
-            // Redirect after event is logged
             window.location.href = targetUrl;
         });
 
-        // Fallback redirect in case callback doesn't fire
         setTimeout(() => {
             console.log("Fallback redirect triggered");
             window.location.href = targetUrl;
@@ -116,26 +117,21 @@ function initGetStartedButton() {
     getStartedBtnInitialized = true;
 }
 
-// Setup button after Branch is ready
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if Branch SDK is already initialized
     if (typeof branch !== 'undefined' && branch) {
         console.log("✓ Branch SDK is ready");
-        // Setup button now that Branch is ready
         initGetStartedButton();
     } else {
         console.warn("Branch SDK not available");
     }
 });
+*/
+// ============================================================================
 
-// Smooth scrolling - EXCLUDE get-started-btn (REMOVE THE DUPLICATE BELOW)
+// Smooth scrolling - EXCLUDE get-started-btn
+// Note: get-started-btn has an external href, so it won't match a[href^="#"]
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
    anchor.addEventListener('click', function (e) {
-      // Skip if this is the get-started button
-      if (this.id === 'get-started-btn') {
-         return;
-      }
-
       e.preventDefault();
       const target = document.querySelector(this.getAttribute('href'));
       if (target) {
